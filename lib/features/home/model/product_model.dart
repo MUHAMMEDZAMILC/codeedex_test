@@ -45,6 +45,7 @@ class ProductElement {
     int? discount;
     bool? onSale;
     bool? popular;
+    int quandity =1;
 
     ProductElement({
         this.id,
@@ -59,6 +60,7 @@ class ProductElement {
         this.discount,
         this.onSale,
         this.popular,
+        this.quandity=1
     });
 
     factory ProductElement.fromJson(Map<String, dynamic> json) => ProductElement(
@@ -70,7 +72,7 @@ class ProductElement {
         brand: json["brand"],
         model: json["model"],
         color: json["color"],
-        category: categoryValues.map[json["category"]]!,
+        category: categoryValues.map[json["category"]],
         discount: json["discount"],
         onSale: json["onSale"],
         popular: json["popular"],

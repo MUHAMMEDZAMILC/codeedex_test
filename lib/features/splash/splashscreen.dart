@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          AppText(text: 'SplashScreen',style: TextStyle(fontSize: 20,fontWeight: FontWeight.w500),)
+          AppText(text: 'SplashScreen',size: 20,weight: FontWeight.w500,)
         ],
       ),
     ),

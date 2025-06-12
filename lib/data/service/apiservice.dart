@@ -22,6 +22,7 @@ class Api {
       switch (method) {
         case Method.get:
           String url = baseUrl + endpoint;
+          log(url);
           response = await http.get(Uri.parse(url), headers: header ?? _header);
           log(response.body);
           try {

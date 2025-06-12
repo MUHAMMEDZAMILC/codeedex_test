@@ -2,6 +2,8 @@ import 'package:codeedex_test/core/constants/appconstants.dart';
 import 'package:codeedex_test/core/constants/appdiementions.dart';
 import 'package:codeedex_test/core/theme/colors.dart';
 import 'package:codeedex_test/features/home/controller/home_provider.dart';
+import 'package:codeedex_test/features/home/model/product_model.dart';
+import 'package:codeedex_test/features/product/view/product_screen.dart';
 import 'package:codeedex_test/shared/apptext.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +18,23 @@ class HomeScree extends StatefulWidget {
 
 class _HomeScreeState extends State<HomeScree> {
   TextEditingController searchCtrl = TextEditingController();
+  bool ispageloading = true,productloading= false;
   @override
   void initState() {
-      context.read<HomeProvider>().getcategory(context);
+    getdata();
+       
     super.initState();
   }
+  getdata()async{
+      await   context.read<HomeProvider>().getcategory(context);
+      await context.read<HomeProvider>().getproduct(context);
+      ispageloading = false;
+      setState(() {
+        
+      });
+
+  }
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +59,7 @@ class _HomeScreeState extends State<HomeScree> {
                 child: CircleAvatar(
                   radius: 8,
                   backgroundColor: AppColor.primarycolor,
-                  child: AppText(text: '3',style: TextStyle(color: AppColor.white,fontWeight: FontWeight.w400,fontSize: 10),),
+                  child: AppText(text: '3',color: AppColor.white,weight: FontWeight.w400,size: 10,),
                 ),
               )
             ],
@@ -54,6 +68,20 @@ class _HomeScreeState extends State<HomeScree> {
       ),
       body: Consumer<HomeProvider>(
         builder: (context,state,child) {
+          if (ispageloading) {
+            return SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child:  Center(
+                child: CircularProgressIndicator(
+                  strokeWidth: 6,
+                  strokeCap: StrokeCap.round,
+                  color: AppColor.primarycolor,
+                  backgroundColor: AppColor.bordercolor.withOpacity(0.4),
+                ),
+              ),
+            );
+          }
           return SizedBox(
             width: double.infinity,
             height: double.infinity,
@@ -61,6 +89,7 @@ class _HomeScreeState extends State<HomeScree> {
               padding:  EdgeInsets.all(Appdiementions.padding16),
               child: SingleChildScrollView(
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     TextFormField(controller:searchCtrl,
                     
@@ -98,7 +127,7 @@ class _HomeScreeState extends State<HomeScree> {
                                 padding: const EdgeInsets.all(Appdiementions.padding16),
                                 child: Column(
                                   children: [
-                                    AppText(text: 'Clearance\nSales',style: TextStyle(fontSize: 24,color: AppColor.white,fontWeight: FontWeight.w500),)
+                                    AppText(text: 'Clearance\nSales',size: 24,color: AppColor.white,weight: FontWeight.w500,)
                                   ],
                                 ),
                               ),
@@ -117,26 +146,39 @@ class _HomeScreeState extends State<HomeScree> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppText(text: 'Categories'),
-                        AppText(text: 'See All',style: TextStyle(color: AppColor.primarycolor),),
+                        AppText(text: 'See All',color: AppColor.primarycolor,),
                       ],
                     ),
                     Appdiementions.gap,
                     SizedBox(
                       width: double.infinity,
-                      height: 40,
+                      height: 30,
                       child: Row(
                         children: [
                           Padding(
                                 padding: const EdgeInsets.only(right:  8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColor.white,
-                                    borderRadius: BorderRadius.circular(Appdiementions.padding),
-                                    border: Border.all(color: AppColor.black)
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal:  8.0),
-                                    child: Center(child: AppText(text: state.categories![index],)),
+                                child: GestureDetector(
+                                  onTap: () async{
+                                    productloading=true;
+                                    setState(() {
+                                      
+                                    });
+                                    await context.read<HomeProvider>().changecategory(context, 'All');
+                                     productloading=false;
+                                    setState(() {
+                                      
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color:state.selectedcategory=='All'?AppColor.primarycolor: AppColor.white,
+                                      borderRadius: BorderRadius.circular(Appdiementions.padding),
+                                      border: Border.all(color:state.selectedcategory=='All'?Colors.transparent: AppColor.black)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal:  12.0),
+                                      child: Center(child: AppText(text: 'All',color: state.selectedcategory=='All'?AppColor.white:null,)),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -147,16 +189,30 @@ class _HomeScreeState extends State<HomeScree> {
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.only(right:  8.0),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: AppColor.white,
-                                    borderRadius: BorderRadius.circular(Appdiementions.padding),
-                                    border: Border.all(color: AppColor.black)
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal:  8.0),
-                                    child: Center(child: AppText(text: state.categories![index],)),
+                                padding: const EdgeInsets.only(right:  12.0),
+                                child: GestureDetector(
+                                   onTap: () async{
+                                     productloading=true;
+                                    setState(() {
+                                      
+                                    });
+                                    await 
+                                    context.read<HomeProvider>().changecategory(context, state.categories![index],);
+                                     productloading=false;
+                                    setState(() {
+                                      
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: state.selectedcategory== state.categories![index]?AppColor.primarycolor: AppColor.white,
+                                      borderRadius: BorderRadius.circular(Appdiementions.padding),
+                                      border: Border.all(color:  state.selectedcategory== state.categories![index]?Colors.transparent:AppColor.black)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal:  8.0),
+                                      child: Center(child: AppText(text: state.categories![index],color: state.selectedcategory== state.categories![index]?AppColor.white:null,)),
+                                    ),
                                   ),
                                 ),
                               );
@@ -166,40 +222,73 @@ class _HomeScreeState extends State<HomeScree> {
                       ),
                     ),
                     Appdiementions.gap16,
-                    SizedBox(
-                      height: 400,
-                      width: double.infinity,
-                      child: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 1/1.3,mainAxisSpacing: Appdiementions.padding16,crossAxisSpacing: Appdiementions.padding16), itemBuilder: (context, index) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Container(
+                
+                
+                SizedBox(
+                  child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1 / 1.3,
+                    mainAxisSpacing: Appdiementions.padding16,
+                    crossAxisSpacing: Appdiementions.padding16,
+                  ),
+                  itemCount: state.products.length, 
+                  itemBuilder: (context, index) {
+                    ProductElement data = state.products[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductScreen(productid: data.id!),));
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Container(
                               decoration: BoxDecoration(
-                                color: AppColor.bordercolor.withOpacity(0.4),
-                                borderRadius: BorderRadius.circular(Appdiementions.padding16),
-                             
+                                      color: AppColor.bordercolor.withOpacity(0.4),
+                                      borderRadius: BorderRadius.circular(Appdiementions.padding16),
                               ),
-                              child: Center(child: SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: Image.network('https://atlas-content-cdn.pixelsquid.com/stock-images/iphone-15-pink-smartphone-camera-vnxB1W1-600.jpg',scale: 2,))),
-                               
+                              child: Center(
+                                      child: SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child: Image.network(
+                      data.image??'https://static.vecteezy.com/system/resources/thumbnails/053/177/273/small/black-plastic-bottle-with-pump-top-for-liquid-skincare-products-free-png.png',
+                      scale: 2,
+                      errorBuilder: (context, error, stackTrace) => Image.network('https://static.vecteezy.com/system/resources/thumbnails/053/177/273/small/black-plastic-bottle-with-pump-top-for-liquid-skincare-products-free-png.png'),
+                                        ),
+                                      ),
                               ),
                             ),
-                            Appdiementions.gapSmall,
-                            Column(
-                              children: [
-                                AppText(text: 'AirPods',style: TextStyle(color: AppColor.hintcolor,fontSize: 12),),
-                                 AppText(text: '200',style: TextStyle(color: AppColor.black,fontSize: 14,fontWeight: FontWeight.w500),),
-                              ],
-                            ),
-                           
-                          ],
-                        );
-                      },),
-                    )
+                          ),
+                          Appdiementions.gapSmall,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AppText(
+                                      text: data.title??'',
+                                      color: AppColor.hintcolor,
+                                      maximumline: 2,
+                                      size: 12,
+                              ),
+                              AppText(
+                                      text: data.price.toString(),
+                                      color: AppColor.black,
+                                      size: 14,
+                                      weight: FontWeight.w500,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+                
+                ),
+                
                   ],
                 ),
               ),
