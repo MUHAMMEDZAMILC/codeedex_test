@@ -71,7 +71,6 @@ class _ProductScreenState extends State<ProductScreen> {
                       state.product!.image ?? 'https://static.vecteezy.com/system/resources/thumbnails/053/177/273/small/black-plastic-bottle-with-pump-top-for-liquid-skincare-products-free-png.png',
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
-                        // Optionally, you can return a placeholder image widget here
                         return Image.network('https://static.vecteezy.com/system/resources/thumbnails/053/177/273/small/black-plastic-bottle-with-pump-top-for-liquid-skincare-products-free-png.png');
                       },
                     ),

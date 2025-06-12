@@ -23,6 +23,13 @@ class _CartScreenState extends State<CartScreen> {
       appBar: AppBar(),
       body: Consumer<CartProvider>(
         builder: (context,state,child) {
+          if (state.cartproducts.isEmpty) {
+            return SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Center(child: AppText(text: 'Pproduct Not Found',weight: FontWeight.w500,),),
+            );
+          }
           return SizedBox(
             width: double.infinity,
             height: double.infinity,
@@ -43,8 +50,13 @@ class _CartScreenState extends State<CartScreen> {
                             color: AppColor.bordercolor.withOpacity(0.4),
                             borderRadius: BorderRadius.circular(12)
                           ),
-                          child: Image.network('https://static.vecteezy.com/system/resources/thumbnails/053/177/273/small/black-plastic-bottle-with-pump-top-for-liquid-skincare-products-free-png.png'),
-                        ),
+                          child: Image.network(
+                      data.image ?? 'https://static.vecteezy.com/system/resources/thumbnails/053/177/273/small/black-plastic-bottle-with-pump-top-for-liquid-skincare-products-free-png.png',
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.network('https://static.vecteezy.com/system/resources/thumbnails/053/177/273/small/black-plastic-bottle-with-pump-top-for-liquid-skincare-products-free-png.png');
+                      },
+                    ), ),
                         Appdiementions.gaphori16,
                         Expanded(
                           child: Column(
