@@ -27,7 +27,7 @@ class _CartScreenState extends State<CartScreen> {
             return SizedBox(
               width: double.infinity,
               height: double.infinity,
-              child: Center(child: AppText(text: 'Pproduct Not Found',weight: FontWeight.w500,),),
+              child: Center(child: AppText(text: 'Product Not Found',weight: FontWeight.w500,),),
             );
           }
           return SizedBox(
